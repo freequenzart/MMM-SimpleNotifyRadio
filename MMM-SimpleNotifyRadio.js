@@ -39,6 +39,7 @@ Module.register("MMM-SimpleNotifyRadio",{
 
 	notificationReceived: function(notification, payload, sender) {
 		var self = this;
+		console.log(notification, payload);
 		
 		if (notification === "HIDE_RADIO") {
 			self.hideModule();
@@ -54,7 +55,7 @@ Module.register("MMM-SimpleNotifyRadio",{
 		var stations = self.config.stations;
 		if (notification === "START_RADIO" && stations.length > 0) {
 			self.config.paused = false;
-	        	self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
+	        self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
 			self.updateDom();
 		}
 		if (notification === "SWITCH_PREV_RADIO_STATION" && stations.length > 0) {
@@ -63,22 +64,33 @@ Module.register("MMM-SimpleNotifyRadio",{
 			if(self.config.currentIndex < 0) {
 				self.config.currentIndex = stations.length - 1;
 			}
-	        	self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
+	        self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
 			self.updateDom();
 		}
 		if (notification === "SWITCH_NEXT_RADIO_STATION" && stations.length > 0) {
 			self.config.paused = false;
 			self.config.currentIndex = (self.config.currentIndex + 1) % stations.length;
-	        	self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
+	        self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
 			self.updateDom();
 		}
 		if (notification === "STOP_RADIO" && stations.length > 0) {
 			self.config.paused = true;
-	        	self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
+	        self.sendSocketNotification("SWITCH_RADIO_STATION", self.config);
 			self.updateDom();
 		}
+		if(notification === "VOLUME_UP" || 
+		   notification === "VOLUME_DOWN" ||
+		   notification === "VOLUME_MUTE" ||
+		   notification === "VOLUME_UNMUTE") {
+			self.sendSocketNotification(notification, self.config);
+		}
 	},
+	socketNotificationReceived: function(notification, payload) {
 
+		if(notification === "VOLUME_CHANGED"){
+			console.log(payload.volume);
+		}
+	},
 	// Override dom generator.
 	getDom: function() {
 		var wrapper      = document.createElement("div");

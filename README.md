@@ -4,7 +4,22 @@ notifications. For Example I use my other module [MMM-SimpleButtons](https://git
 In the moment this module is only an early version and the small helping Texts appears only in german. You can change them in the <code>getDom</code> function.
 ## Installation
 1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/freequenzart/MMM-SimpleNotifyRadio.git`. A new folder will appear navigate into it.
-2. in the stations folder you will find some example stations from germany
+2. in the controls dir all files have to be executeable
+3. the older version had .sh files in a station dir. this is no longer needed
+
+## Notifications
+1. `HIDE_RADIO` hide radio module
+2. `SHOW_RADIO` show radio module
+3. `START_RADIO` start webradio
+4. `STOP_RADIO` stop webradio
+5. `SWITCH_PREV_RADIO_STATION` switches to the prev station
+6. `SWITCH_NEXT_RADIO_STATION` switches to the next station
+7. `SWITCH_RADIO_STATION` internal command
+8. `VOLUME_UP` highter the volume of pi
+9. `VOLUME_DOWN` lower the volume of pi
+10. `VOLUME_MUTE` mute the pi
+11. `VOLUME_UNMUTE` unmute the pi
+12. `VOLUME_CHANGED` internal command 
 
 ## Using the module
 To use this module, add it to the modules array in the `config/config.js` file:
@@ -16,36 +31,42 @@ modules: [
 		config: {
 			stations: [
 				{
-					stationFile: "bigfm",
+					stationURL: "http://streams.bigfm.de/bigfm-deutschland-128-mp3?usid=0-0-H-M-D-01",
 					stationName: "bigFM"
 				},
 				{
-					stationFile: "psr",
+					stationURL: "http://psr.hoerradar.de/psr-live-mp3-hq",
 					stationName: "Radio PSR"
 				},
 				{
-					stationFile: "jump",
-					stationName: "MDR JUMP"
+					stationURL: "http://avw.mdr.de/streams/284320-0_mp3_high.m3u",
+					stationName: "MDR JUMP",
+					isPlaylist: true
 				},
 				{
-					stationFile: "mdr_sachsen",
-					stationName: "MDR Sachsen"
+					stationURL: "http://avw.mdr.de/streams/284280-0_mp3_high.m3u",
+					stationName: "MDR Sachsen",
+					isPlaylist: true
 				},
 				{
-					stationFile: "rtl_sachsen",
+					stationURL: "http://hermes.bcs-systems.de/hitradio-rtl_simulcast__dresden_192k_mp3",
 					stationName: "Hitradio RTL"
 				},
 				{
-					stationFile: "sunshine",
+					stationURL: "http://sunshinelive.hoerradar.de/sunshinelive-live-mp3-hq",
 					stationName: "Sunshine Live"
 				},
 				{
-					stationFile: "1live",
+					stationURL: "http://wdr-1live-live.cast.addradio.de/wdr/1live/live/mp3/128/stream.mp3",
 					stationName: "1Live"
 				},
 				{
-					stationFile: "clubsandwich",
+					stationURL: "http://fluxfm.hoerradar.de/flux-clubsandwich-mp3-mq",
 					stationName: "Flux Clubsandwich"
+				},
+				{
+					stationURL: "http://topradio-stream20.radiohost.de/kissfm_mp3-192",
+					stationName: "Kiss FM"
 				}
 			]
 		}
@@ -68,15 +89,17 @@ The following properties can be configured:
 	<tbody>
 		<tr>
 			<td><code>stations</code></td>
-			<td>an array of objects with 2 keys:<br>
-				<b>stationFile</b> is the name of the script file in the station folder<br>
+			<td>an array of objects with 2 / 3 keys:<br>
+				<b>stationURL</b> url to webstream<br>
 				<b>stationName</b> is the Text which is displayed when the Channel is choosen<br>
+				<b>isPlaylist</b> is a boolean to ad the -@ parameter to the mpg123 bash command for playlists<br>
 				<br>
 				<pre>
 <code>stations: [
 	{
-		stationFile: "bigfm",
-		stationName: "bigFM"
+		stationFile: "http://streams.bigfm.de/bigfm-deutschland-128-mp3?usid=0-0-H-M-D-01",
+		stationName: "bigFM",
+		isPlaylist: false // *.m3u or *.pls would be true
 	},
 ...</code>
 				</pre>
@@ -91,7 +114,7 @@ The following properties can be configured:
 
 ## Developer Notes
 1. mpg123 should be installed on your device <code>sudo apt-get install mpg123</code>
-2. the scripts in the station folder should be executeable  <code>chmod +x FILENAME</code>
+2. all scripts in the conrols folder should be executeable  <code>chmod +x FILENAME</code>
 3. mpg123 can only play http Streams! I can't get https running
 3. Thank you [gismo2006](https://github.com/gismo2006) for the basic idea and code of [MMM-Myvoiceradio Repository](https://github.com/gismo2006/MMM-Myvoiceradio)!
 
