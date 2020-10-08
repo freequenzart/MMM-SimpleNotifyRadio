@@ -30,7 +30,9 @@ Module.register("MMM-SimpleNotifyRadio",{
 	},
 
 	start: function() {
-		var self = this;/*
+		var self = this;
+		
+		/*
 		self.notificationReceived("START_RADIO", { });
 		setTimeout(function() { self.notificationReceived("SWITCH_NEXT_RADIO_STATION", { }) }, 10000);
 		setTimeout(function() { self.notificationReceived("SWITCH_NEXT_RADIO_STATION", { }) }, 20000);
@@ -85,11 +87,17 @@ Module.register("MMM-SimpleNotifyRadio",{
 			self.sendSocketNotification(notification, self.config);
 		}
 	},
+	
 	socketNotificationReceived: function(notification, payload) {
 
 		if(notification === "VOLUME_CHANGED"){
 			console.log(payload.volume);
 		}
+
+		if(notification === "MODULE_STATUS_CHANGED"){
+			this.sendNotification("MODULE_STATUS_CHANGED", payload);
+		}
+
 	},
 	// Override dom generator.
 	getDom: function() {

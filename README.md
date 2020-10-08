@@ -7,6 +7,30 @@ In the moment this module is only an early version and the small helping Texts a
 2. in the controls dir all files have to be executeable
 3. the older version had .sh files in a station dir. this is no longer needed
 
+### Sound on new Raspbian OS
+Raspbian OS changed the way the sound works in the newest buster versions. So the volume*.sh files won't work anymore. `amixer -q -M  sset PCM $value` show the error that "PCM" wasn't find. So I head to changed it to `amixer -q -M  sset Headphone $value` because I configured the sound in the following way:
+1. look up the existing sound boards: `cat /proc/asound/cards`:
+````javascript
+ 0 [b1             ]: bcm2835_hdmi - bcm2835 HDMI 1
+                      bcm2835 HDMI 1
+ 1 [Headphones     ]: bcm2835_headphonbcm2835 Headphones - bcm2835 Headphones
+                      bcm2835 Headphones
+````
+
+2. I choose headphone for the analog output and created / edited `sudo nano /etc/asound.conf`:
+````javascript
+   defaults.pcm.card 1
+   defaults.ctl.card 1
+````
+
+3. next I changed the existing file `nano ~/.asoundrc` to the same and deleted the other content:
+````javascript
+   defaults.pcm.card 1
+   defaults.ctl.card 1
+````
+
+Now the volume and sound in the bash was working again.
+
 ## Notifications
 1. `HIDE_RADIO` hide radio module
 2. `SHOW_RADIO` show radio module
@@ -19,7 +43,8 @@ In the moment this module is only an early version and the small helping Texts a
 9. `VOLUME_DOWN` lower the volume of pi
 10. `VOLUME_MUTE` mute the pi
 11. `VOLUME_UNMUTE` unmute the pi
-12. `VOLUME_CHANGED` internal command 
+12. `VOLUME_CHANGED` internal command
+13. `MODULE_STATUS_CHANGED` for reporting to external modules
 
 ## Using the module
 To use this module, add it to the modules array in the `config/config.js` file:

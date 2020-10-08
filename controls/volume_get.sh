@@ -1,2 +1,2 @@
 #!/bin/bash
-amixer -M sget PCM | grep -o '[0-9]*%'
+amixer -M sget Headphone | grep -o '[0-9]*%'
